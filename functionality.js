@@ -47,17 +47,14 @@ function addToDoNotes() {
 function iterateUserNotes() {
     console.log(`--------iterateUserNotes method start--------`);
     let notesCount = Number.parseInt(localStorage.getItem(`notes-count`));
-    console.log(`Logging Notes Count Value: ${notesCount}`);
     if (notesCount > 0) {
         let noNotesHeading = document.querySelector(`#no-notes-heading`);
-        console.log(noNotesHeading);
         if (noNotesHeading != null) {
             noNotesHeading.remove();
         }
         console.log(`No notes to display to User.`);
     }
     let notesData = JSON.parse(localStorage.getItem(`notes-info`));
-    console.log(notesData);
     if (Object.keys(notesData).length === 0) {
         let headingThird = document.createElement(`h3`);
         headingThird.setAttribute(`id`, `no-notes-heading`);
@@ -69,7 +66,6 @@ function iterateUserNotes() {
         console.log(`--------Iterating User Notes start--------`);
         for (const key in notesData) {
             let cardDiv = document.createElement(`div`);
-            console.log(key);
             cardDiv.innerHTML =
                 `<div id="div-${key}" class="card me-4" style="width: 18rem;">
                     <img src="./notes-image.jpg" class="card-img-top" alt="...">
