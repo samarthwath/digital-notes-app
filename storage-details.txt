@@ -1,0 +1,11 @@
+Local Storage Items: 
+1. notes-count
+2. Map: Key: Note Number Value: Notes Info entered by the User. 
+3. Iteration of Map values to display all the notes. 
+
+
+Sequence of Methods/ Methods used to perform operations: 
+1. Add Notes to add user notes. 
+2. Delete Notes to delete user note. 
+3. Iterate Notes. 
+4. 
