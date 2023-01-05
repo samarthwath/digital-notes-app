@@ -3,7 +3,9 @@ let notesCount = localStorage.getItem(`notes-count`);
 let notesData = {};
 let notesLayout = document.querySelector(`#notes-layout`);
 if (notesCount === null || notesCount == 0) {
+    console.log(`Log Notes Count: ${notesCount}`);
     localStorage.setItem(`notes-count`, 0);
+    localStorage.setItem(`notes-info`, JSON.stringify(notesData));
     let headingThird = document.createElement(`h3`);
     headingThird.setAttribute(`id`, `no-notes-heading`);
     headingThird.style.marginTop = `14px`;
@@ -31,15 +33,14 @@ function addToDoNotes() {
             </div>
         </div>`;
     notesData = JSON.parse(localStorage.getItem(`notes-info`));
-    if (notesData === null) {
-        notesData = {};
-        notesData[notesCount] = getNoteText.value;
-        localStorage.setItem(`notes-info`, JSON.stringify(notesData));
-    } else {
-        notesData[notesCount] = getNoteText.value;
-        localStorage.setItem(`notes-info`, JSON.stringify(notesData));
+    notesData[notesCount] = getNoteText.value;
+    localStorage.setItem(`notes-info`, JSON.stringify(notesData));
+    if (notesCount > 0) {
+        let noNotesHeading = document.querySelector(`#no-notes-heading`);
+        if (noNotesHeading != null) {
+            noNotesHeading.remove();
+        }
     }
-    console.log(cardDiv);
     notesLayout.appendChild(cardDiv);
     getNoteText.value = ``;
 }
@@ -47,7 +48,7 @@ function iterateUserNotes() {
     console.log(`--------iterateUserNotes method start--------`);
     let notesCount = Number.parseInt(localStorage.getItem(`notes-count`));
     console.log(`Logging Notes Count Value: ${notesCount}`);
-    if (notesCount == 1) {
+    if (notesCount > 0) {
         let noNotesHeading = document.querySelector(`#no-notes-heading`);
         console.log(noNotesHeading);
         if (noNotesHeading != null) {
@@ -57,7 +58,14 @@ function iterateUserNotes() {
     }
     let notesData = JSON.parse(localStorage.getItem(`notes-info`));
     console.log(notesData);
-    if (notesData != null) {
+    if (Object.keys(notesData).length === 0) {
+        let headingThird = document.createElement(`h3`);
+        headingThird.setAttribute(`id`, `no-notes-heading`);
+        headingThird.style.marginTop = `14px`;
+        headingThird.innerText = `No Notes to Display`;
+        notesLayout.appendChild(headingThird);
+    }
+    else if (Object.keys(notesData).length !== 0) {
         console.log(`--------Iterating User Notes start--------`);
         for (const key in notesData) {
             let cardDiv = document.createElement(`div`);
@@ -80,6 +88,13 @@ function iterateUserNotes() {
 function deleteUserNote(id) {
     let notesData = JSON.parse(localStorage.getItem(`notes-info`));
     delete notesData[id];
+    if (Object.keys(notesData).length === 0) {
+        let headingThird = document.createElement(`h3`);
+        headingThird.setAttribute(`id`, `no-notes-heading`);
+        headingThird.style.marginTop = `14px`;
+        headingThird.innerText = `No Notes to Display`;
+        notesLayout.appendChild(headingThird);
+    }
     console.log(`notes-object after element deletion.... `);
     console.log(notesData);
     localStorage.setItem(`notes-info`, JSON.stringify(notesData));
