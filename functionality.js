@@ -1,4 +1,5 @@
 let addNote = document.querySelector(`#add-note-btn`);
+let deleteAllNotesButton = document.querySelector(`#delete-all-notes-btn`);
 let notesCount = localStorage.getItem(`notes-count`);
 let notesData = {};
 let notesLayout = document.querySelector(`#notes-layout`);
@@ -14,6 +15,7 @@ if (notesCount === null || notesCount == 0) {
 }
 iterateUserNotes();
 addNote.addEventListener(`click`, addToDoNotes);
+deleteAllNotesButton.addEventListener(`click`, deleteAllUserNotes);
 
 function addToDoNotes() {
     let getNoteText = document.querySelector(`#note-text`);
@@ -56,11 +58,14 @@ function iterateUserNotes() {
     }
     let notesData = JSON.parse(localStorage.getItem(`notes-info`));
     if (Object.keys(notesData).length === 0) {
-        let headingThird = document.createElement(`h3`);
-        headingThird.setAttribute(`id`, `no-notes-heading`);
-        headingThird.style.marginTop = `14px`;
-        headingThird.innerText = `No Notes to Display`;
-        notesLayout.appendChild(headingThird);
+        let noNotesHeading = document.querySelector(`#no-notes-heading`);
+        if (noNotesHeading == null) {
+            let headingThird = document.createElement(`h3`);
+            headingThird.setAttribute(`id`, `no-notes-heading`);
+            headingThird.style.marginTop = `14px`;
+            headingThird.innerText = `No Notes to Display`;
+            notesLayout.appendChild(headingThird);
+        }
     }
     else if (Object.keys(notesData).length !== 0) {
         console.log(`--------Iterating User Notes start--------`);
@@ -90,6 +95,7 @@ function deleteUserNote(id) {
         headingThird.style.marginTop = `14px`;
         headingThird.innerText = `No Notes to Display`;
         notesLayout.appendChild(headingThird);
+        localStorage.setItem(`notes-count`, 0);
     }
     console.log(`notes-object after element deletion.... `);
     console.log(notesData);
@@ -97,4 +103,17 @@ function deleteUserNote(id) {
     let noteItem = document.querySelector(`#div-${id}`);
     noteItem.remove();
     console.log(`Delete User Note button clicked`);
+}
+function deleteAllUserNotes() {
+    console.log(`--------deleteAllUserNotes method start--------`);
+    let notesData = JSON.parse(localStorage.getItem(`notes-info`));
+    for (let key in notesData) {
+        let noteItem = document.querySelector(`#div-${key}`);
+        noteItem.remove();
+        delete notesData[key];
+    }
+    localStorage.setItem(`notes-info`, JSON.stringify(notesData));
+    localStorage.setItem(`notes-count`, 0);
+    iterateUserNotes();
+    console.log(`--------deleteAllUserNotes method ends--------`);
 }
