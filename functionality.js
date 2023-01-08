@@ -14,6 +14,7 @@ if (notesCount === null || notesCount == 0) {
     headingThird.innerText = `No Notes to Display`;
     notesLayout.appendChild(headingThird);
 }
+
 iterateUserNotes();
 /**
  * Added null check handler to load script correctly for view-notes page. 
@@ -26,15 +27,19 @@ if (addNote != null && deleteAllNotesButton != null) {
 searchButton.addEventListener(`click`, searchUserNote);
 
 function addToDoNotes() {
+    console.log(`--------addToDoNotes method start--------`);
     let getNoteText = document.querySelector(`#note-text`);
-    console.log(getNoteText.value);
-    let notesCount = Number.parseInt(localStorage.getItem(`notes-count`));
-    notesCount += 1;
-    localStorage.setItem(`notes-count`, notesCount);
-    console.log(`Add Note button clicked.`);
-    let cardDiv = document.createElement(`div`);
-    cardDiv.innerHTML =
-        `<div id="div-${notesCount}" class="card me-4" style="width: 18rem;">
+    if (getNoteText.value === "") {
+        alert(`Please add a Note..`);
+    } else {
+        console.log(getNoteText.value);
+        let notesCount = Number.parseInt(localStorage.getItem(`notes-count`));
+        notesCount += 1;
+        localStorage.setItem(`notes-count`, notesCount);
+        console.log(`Add Note button clicked.`);
+        let cardDiv = document.createElement(`div`);
+        cardDiv.innerHTML =
+            `<div id="div-${notesCount}" class="card me-4" style="width: 18rem;">
             <img src="./notes-image.jpg" class="card-img-top" alt="...">
             <div class="card-body">
             <h5 class="card-title">Note: ${notesCount}</h5>
@@ -42,17 +47,19 @@ function addToDoNotes() {
             <button class="btn btn-primary" onclick="deleteUserNote(this.id)" id="${notesCount}">Delete Note</button>
             </div>
         </div>`;
-    notesData = JSON.parse(localStorage.getItem(`notes-info`));
-    notesData[notesCount] = getNoteText.value;
-    localStorage.setItem(`notes-info`, JSON.stringify(notesData));
-    if (notesCount > 0) {
-        let noNotesHeading = document.querySelector(`#no-notes-heading`);
-        if (noNotesHeading != null) {
-            noNotesHeading.remove();
+        notesData = JSON.parse(localStorage.getItem(`notes-info`));
+        notesData[notesCount] = getNoteText.value;
+        localStorage.setItem(`notes-info`, JSON.stringify(notesData));
+        if (notesCount > 0) {
+            let noNotesHeading = document.querySelector(`#no-notes-heading`);
+            if (noNotesHeading != null) {
+                noNotesHeading.remove();
+            }
         }
+        notesLayout.appendChild(cardDiv);
+        getNoteText.value = ``;
     }
-    notesLayout.appendChild(cardDiv);
-    getNoteText.value = ``;
+    console.log(`--------addToDoNotes method ends--------`);
 }
 function iterateUserNotes() {
     console.log(`--------iterateUserNotes method start--------`);
@@ -95,6 +102,7 @@ function iterateUserNotes() {
     console.log(`--------iterateUserNotes method ends--------`);
 }
 function deleteUserNote(id) {
+    console.log(`--------deleteUserNote method start--------`);
     let notesData = JSON.parse(localStorage.getItem(`notes-info`));
     delete notesData[id];
     if (Object.keys(notesData).length === 0) {
@@ -111,6 +119,7 @@ function deleteUserNote(id) {
     let noteItem = document.querySelector(`#div-${id}`);
     noteItem.remove();
     console.log(`Delete User Note button clicked`);
+    console.log(`--------deleteUserNote method ends--------`);
 }
 function deleteAllUserNotes() {
     console.log(`--------deleteAllUserNotes method start--------`);
