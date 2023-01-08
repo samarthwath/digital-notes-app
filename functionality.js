@@ -1,5 +1,6 @@
 let addNote = document.querySelector(`#add-note-btn`);
 let deleteAllNotesButton = document.querySelector(`#delete-all-notes-btn`);
+let searchButton = document.querySelector(`#search-btn`);
 let notesCount = localStorage.getItem(`notes-count`);
 let notesData = {};
 let notesLayout = document.querySelector(`#notes-layout`);
@@ -14,8 +15,15 @@ if (notesCount === null || notesCount == 0) {
     notesLayout.appendChild(headingThird);
 }
 iterateUserNotes();
-addNote.addEventListener(`click`, addToDoNotes);
-deleteAllNotesButton.addEventListener(`click`, deleteAllUserNotes);
+/**
+ * Added null check handler to load script correctly for view-notes page. 
+ * 
+ */
+if (addNote != null && deleteAllNotesButton != null) {
+    addNote.addEventListener(`click`, addToDoNotes);
+    deleteAllNotesButton.addEventListener(`click`, deleteAllUserNotes);
+}
+searchButton.addEventListener(`click`, searchUserNote);
 
 function addToDoNotes() {
     let getNoteText = document.querySelector(`#note-text`);
@@ -116,4 +124,29 @@ function deleteAllUserNotes() {
     localStorage.setItem(`notes-count`, 0);
     iterateUserNotes();
     console.log(`--------deleteAllUserNotes method ends--------`);
+}
+function searchUserNote() {
+    console.log(`--------searchUserNote method start--------`);
+    let notesData = JSON.parse(localStorage.getItem(`notes-info`));
+    let searchedText = document.querySelector(`#search-text`).value;
+    console.log(`Searched Note Text: ${searchedText}`);
+    for (let key in notesData) {
+        if (notesData[key].toLowerCase().search(searchedText.toLowerCase()) === -1) {
+            let noteItem = document.querySelector(`#div-${key}`);
+            /**
+             * Added handler if element got searched properly and delete from DOM but exists in local storage.  
+             * 
+             */
+            if (noteItem != null) {
+                noteItem.remove();
+                delete notesData[key];
+            }
+        }
+    }
+    if (Object.keys(notesData).length === 0) {
+        alert(`Search Note not exists`);
+        iterateUserNotes();
+
+    }
+    console.log(`--------searchUserNote method ends--------`);
 }
